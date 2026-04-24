@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>A Simple Page</title>
+    <style>
+      body {
+        background-color: aliceblue;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+      }
+      .jira-card {
+        background: #fff;
+        width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #0052cc; /* Color corporativo tipo Jira */
+      }
+
+      .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        border: 2px solid #dfe1e6;
+        border-radius: 3px;
+      }
+
+      input[type="text"]:focus {
+        border-color: #4c9aff;
+        outline: none;
+      }
+
+      .task-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .task-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #ebecf0;
+        background: #fff;
+      }
+
+      .task-item:hover {
+        background-color: #f4f5f7;
+      }
+
+      .actions {
+        display: flex;
+        gap: 5px;
+      }
+
+      button {
+        padding: 5px 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 3px;
+        background: #e9e9e9;
+      }
+
+      .btn-add {
+        background: #0052cc;
+        color: white;
+      }
+      .btn-edit {
+        color: #5e6c84;
+      }
+      .btn-delete {
+        color: #de350b;
+      }
+
+      .completed span {
+        text-decoration: line-through;
+        color: #5e6c84;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="jira-card">
+      <h3>Tablero de Jira</h3>
+      <div class="input-group">
+        <input type="text" id="taskInput" placeholder="Añadir una tarea..." />
+        <button id="addBtn" class="btn-add">Crear</button>
+      </div>
+      <ul id="taskList" class="task-list"></ul>
+    </div>
+
+    <script>
+      let task = [];
+
+      const input = document.querySelector("#taskInput");
+      const addBtn = document.querySelector("#addBtn");
+      const list = document.getElementById("taskList");
+
+      addBtn.addEventListener('click', addTask);
+
+
+      input.addEventListener('keydown'  , (e) => {
+        if (e.key === 'Enter') addTask();
+      });
+
+      function addTask() {
+        let textinput = input.value.trim();
+
+        if (!textinput) return alert("Por favor, ingresa una tarea.");
+
+        const newTask = {
+          id: Date.now(),
+          text: textinput,
+          completed: false,
+        };
+        task.push(newTask);
+        input.value = "";
+        renderTasks();
+      }
+
+      function renderTasks() {
+        list.innerHTML = "";
+        task.forEach((t) => {
+          //crear eelemento li
+          const li = document.createElement("li");
+
+          //agregar clase al li
+          // al poner li.class tiene que ser igual a "task-item" + (t.completed ? " completed" : "") para que se agregue la clase completed si la tarea esta completada
+
+          li.className = "task-item" + (t.completed ? " completed" : "");
+
+          //guardar id
+          li.dataset.id = t.id;
+
+          //crear span
+          const span = document.createElement('span');
+          span.textContent = t.text;
+
+          // crear contenedor de botones
+          const actions = document.createElement('div');
+          actions.className = "actions";
+
+          //crear boton editar
+          const editBtn = document.createElement('Button');
+          editBtn.className = "btn-edit";
+          editBtn.textContent = "E";
+
+          //crear bototn eliminar
+          const deleteBtn = document.createElement('Button');
+          deleteBtn.className = "btn-delete";
+          deleteBtn.textContent = "X";
+
+          // se agregan los botones al contenedor de acciones
+          actions.appendChild(editBtn);
+          actions.appendChild(deleteBtn);
+
+          // se agrega el span y el contenedor de acciones al li
+          li.appendChild(span);
+          li.appendChild(actions);
+
+          list.appendChild(li);
+        });
+      }
+    </script>
+  </body>
+</html>
